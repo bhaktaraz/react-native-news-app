@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "758571740530",
+    "firebase_url": "https://dhangadhi-khabar-17c4f.firebaseio.com",
+    "project_id": "dhangadhi-khabar-17c4f",
+    "storage_bucket": "dhangadhi-khabar-17c4f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:758571740530:android:2d7614ead06f586b0781eb",
+        "android_client_info": {
+          "package_name": "com.anubhabi.dhanadhikhabar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "758571740530-8d17d2a8mqekt49g0up76l6m4p5bpmjt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPiU9uNwbCRJFnbdUeW4AsrWBR5KCiYK0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "758571740530-8d17d2a8mqekt49g0up76l6m4p5bpmjt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
