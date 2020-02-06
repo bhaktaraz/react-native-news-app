@@ -135,7 +135,7 @@ export default class Detail extends Component {
 
                                     <TouchableNativeFeedback
                                         key={n.id}
-                                        onPress={() => this.props.navigation.navigate('ArticleDetailScreen', {id: n.id})}
+                                        onPress={() => this.props.navigation.push('ArticleDetailScreen', {id: n.id})}
                                     >
 
                                         <ListItem key={n.id} thumbnail>
