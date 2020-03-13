@@ -4,7 +4,7 @@ import { FlatList } from 'react-native';
 import Category from "../components/Category";
 import { getCategories } from '../store/DhangadhiKhabarClient';
 
-class Categories extends Component {
+class CategoryScreen extends Component {
     static navigationOptions = {
         title: 'वर्ग',
     };
@@ -47,4 +47,4 @@ class Categories extends Component {
     }
 };
 
-export default Categories;
+export default CategoryScreen;

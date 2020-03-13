@@ -19,22 +19,22 @@ export default class Article extends Component {
         } = this.props.article;
         const { noteStyle, featuredTitleStyle } = styles;
         const time = moment(created_on || moment.now()).fromNow();
-        const defaultImg = 'https://www.dhangadhikhabar.com/uploads/configuration/LOGO.jpg';
+        const defaultImg = 'https://www.dhangadhikhabar.com/uploads/configuration/DHANGADHI-KHABAR-HD-FINAL-LOGO.jpeg';
 
         return (
             <TouchableNativeFeedback
                 useForeground
-                onPress={() => this.props.navigation.navigate('ArticleDetailScreen', {id: id})}
+                onPress={() => this.props.navigation.navigate('ArticleDetail', {id: id})}
             >
                 <Card
-                    featuredTitle={title}
-                    featuredTitleStyle={featuredTitleStyle}
+                    // featuredTitle={title}
+                    // featuredTitleStyle={featuredTitleStyle}
                     image={{
                         uri: image || defaultImg
                     }}
                 >
-                    <Text style={{ marginBottom: 10 }}>
-                        {intro || 'Read More..'}
+                    <Text style={featuredTitleStyle}>
+                        {title}
                     </Text>
                     <Divider style={{ backgroundColor: '#dfe6e9' }} />
                     <View
@@ -60,6 +60,7 @@ const styles = {
         marginHorizontal: 5,
         textShadowColor: '#00000f',
         textShadowOffset: { width: 3, height: 3 },
-        textShadowRadius: 3
+        textShadowRadius: 0,
+        fontSize: 22
     }
 };

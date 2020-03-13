@@ -3,7 +3,7 @@ import { FlatList } from 'react-native';
 import Tag from "../components/Tag";
 import { getTrendingTags } from '../store/DhangadhiKhabarClient';
 
-class TrendingTags extends Component {
+class TagScreen extends Component {
     static navigationOptions = {
         title: 'ट्रेंडिंग',
     };
@@ -46,4 +46,4 @@ class TrendingTags extends Component {
     }
 };
 
-export default TrendingTags;
+export default TagScreen;

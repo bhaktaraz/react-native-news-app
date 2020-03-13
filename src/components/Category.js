@@ -16,7 +16,7 @@ export default class Category extends Component {
         return (
             <TouchableNativeFeedback
                 useForeground
-                onPress={() => this.props.navigation.navigate('ArticleDetailScreen', {id: id})}
+                onPress={() => this.props.navigation.navigate('ArticleListByCategory', {id: id})}
             >
                 <Card
                     featuredTitle={name}

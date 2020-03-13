@@ -3,7 +3,7 @@ import {FlatList} from 'react-native';
 import {getNewsDetail} from "../store/DhangadhiKhabarClient";
 import Detail from "../components/Detail";
 
-class ArticleDetail extends Component {
+class ArticleDetailScreen extends Component {
 
     constructor(props) {
         super(props);
@@ -32,4 +32,4 @@ class ArticleDetail extends Component {
     }
 };
 
-export default ArticleDetail;
+export default ArticleDetailScreen;

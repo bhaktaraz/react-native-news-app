@@ -17,14 +17,15 @@ export default class Tag extends Component {
         return (
             <TouchableNativeFeedback
                 useForeground
-                onPress={() => this.props.navigation.navigate('ArticleDetailScreen', {id: id})}
+                onPress={() => this.props.navigation.navigate('ArticleListByTag', {id: tag_id})}
             >
                 <Card
                     featuredTitle={name}
                     featuredTitleStyle={featuredTitleStyle}
                 >
                     <Text style={{ marginBottom: 10 }}>
-                        #{name} [{total_count}]
+                        #{name} 
+                        {/* [{total_count}] */}
                     </Text>
                 </Card>
             </TouchableNativeFeedback>
