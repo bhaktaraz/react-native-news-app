@@ -8,8 +8,8 @@ import { getNews } from '../store/DhangadhiKhabarClient';
 export default class HomeScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
-      headerLeft: <MenuButton onPress={() => navigation.openDrawer()} />,
-      headerTitle: <Logo />,
+      headerLeft: () => <MenuButton onPress={() => navigation.openDrawer()} />,
+      headerTitle: () => <Logo />,
       headerBackTitle: "Home",
       headerLayoutPreset: "center"
     };

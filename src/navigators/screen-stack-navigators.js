@@ -14,9 +14,9 @@ import ArticleListByCategoryScreen from "../screens/ArticleListByCategoryScreen"
 //Add navigators with screens in this file
 export const HomeNavigator = createStackNavigator({
   Home: { screen: HomeScreen },
-  ArticleDetail: { screen: ArticleDetailScreen },
-  ArticleListByTag: { screen: ArticleListByTagScreen },
-  ArticleListByCategory: { screen: ArticleListByCategoryScreen }
+  ArticleDetail: { screen: ArticleDetailScreen, navigationOptions: { title: 'समाचार विस्तारमा'} },
+  ArticleListByTag: { screen: ArticleListByTagScreen, navigationOptions: { title: 'समाचार'} },
+  ArticleListByCategory: { screen: ArticleListByCategoryScreen, navigationOptions: { title: 'समाचार'} }
 });
 
 export const SettingsNavigator = createStackNavigator({
