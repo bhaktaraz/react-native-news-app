@@ -59,3 +59,8 @@ buck-out/
 /ios/Pods/
 
 dhangadhikhabar-app-key.keystore
+# Java heap dumps from crashed Gradle/emulator runs
+*.hprof
+
+# macOS
+.DS_Store
