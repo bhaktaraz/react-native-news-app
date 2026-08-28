@@ -15,11 +15,17 @@ import { Category, Edition } from "../api/types";
 import { useTheme, useThemePreference, radius, spacing, typography } from "../theme";
 import { SkeletonBlock } from "../components/StateViews";
 
+/**
+ * `root` is the first screen of each tab's stack. Focusing a tab alone leaves
+ * its stack wherever the user left it, so a drawer link has to name the root
+ * explicitly -- otherwise "गृहपृष्ठ" lands back on the article the reader was
+ * last on, since drawer categories and article taps both push onto HomeTab.
+ */
 const PRIMARY_LINKS = [
-  { label: "गृहपृष्ठ", icon: "home-outline", screen: "HomeTab" },
-  { label: "खोज्नुहोस्", icon: "search-outline", screen: "SearchTab" },
-  { label: "सेभ गरिएका", icon: "bookmark-outline", screen: "SavedTab" },
-  { label: "ट्रेन्डिङ ट्याग", icon: "flame-outline", screen: "TagTab" },
+  { label: "गृहपृष्ठ", icon: "home-outline", screen: "HomeTab", root: "Home" },
+  { label: "खोज्नुहोस्", icon: "search-outline", screen: "SearchTab", root: "Search" },
+  { label: "सेभ गरिएका", icon: "bookmark-outline", screen: "SavedTab", root: "Saved" },
+  { label: "ट्रेन्डिङ ट्याग", icon: "flame-outline", screen: "TagTab", root: "Tag" },
 ];
 
 const THEME_OPTIONS: { label: string; value: "system" | "light" | "dark"; icon: string }[] = [
@@ -94,8 +100,10 @@ const DrawerContent: React.FC<DrawerContentComponentProps> = ({ navigation, stat
     return nested.routes[nested.index ?? 0]?.name ?? "HomeTab";
   }, [state]);
 
-  const goToTab = (screen: string) => {
-    navigation.navigate("MainHome", { screen });
+  const goToTab = (screen: string, root: string) => {
+    // Navigating to a route already in the stack pops back to it, so this both
+    // focuses the tab and unwinds any article/category screens above its root.
+    navigation.navigate("MainHome", { screen, params: { screen: root } });
     navigation.closeDrawer();
   };
 
@@ -128,7 +136,7 @@ const DrawerContent: React.FC<DrawerContentComponentProps> = ({ navigation, stat
               key={link.screen}
               activeOpacity={0.75}
               style={[styles.linkRow, active && styles.linkRowActive]}
-              onPress={() => goToTab(link.screen)}
+              onPress={() => goToTab(link.screen, link.root)}
             >
               <Ionicons
                 name={link.icon}

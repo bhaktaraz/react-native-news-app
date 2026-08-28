@@ -29,11 +29,36 @@ const ICONS: Record<keyof BottomTabParamList, [string, string]> = {
   SavedTab: ["bookmark", "bookmark-outline"],
 };
 
+/** First screen of each tab's stack. */
+const TAB_ROOTS: Record<keyof BottomTabParamList, string> = {
+  HomeTab: "Home",
+  CategoryTab: "Category",
+  SearchTab: "Search",
+  TagTab: "Tag",
+  SavedTab: "Saved",
+};
+
 const BottomTabNavigator = () => {
   const theme = useTheme();
 
   return (
     <Tab.Navigator
+      screenListeners={({ navigation, route }) => ({
+        tabPress: (event) => {
+          if (!navigation.isFocused()) {
+            return;
+          }
+
+          // Pressing the tab you are already on is a no-op in bottom-tabs v6,
+          // which strands the reader on an article when they tap "गृहपृष्ठ" to
+          // get back to the feed. Re-navigating to the stack's root pops the
+          // article (or category listing) off instead.
+          event.preventDefault();
+          navigation.navigate(route.name as never, {
+            screen: TAB_ROOTS[route.name as keyof BottomTabParamList],
+          } as never);
+        },
+      })}
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarIcon: ({ focused, color, size }) => {
