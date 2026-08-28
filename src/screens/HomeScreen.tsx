@@ -51,6 +51,12 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   // scroll continues, so paging starts from 2.
   const pageRef = useRef(1);
 
+  // Breaking items are part of the news feed too, and now that the strip and
+  // the feed are labelled as different sections, the same headline showing up
+  // in both reads as a bug. Held in a ref so appended pages filter by the same
+  // set without making loadMore depend on the payload.
+  const breakingIdsRef = useRef<Set<number>>(new Set());
+
   const load = useCallback(async (isRefresh = false) => {
     if (isRefresh) {
       setRefreshing(true);
@@ -68,13 +74,17 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       ]);
       setHome(payload);
       setStories(storyList);
-      setFeed(payload.latest);
+      breakingIdsRef.current = new Set(payload.breaking.map((article) => article.id));
+      setFeed(payload.latest.filter((article) => !breakingIdsRef.current.has(article.id)));
       pageRef.current = 1;
+      // Keyed off the unfiltered page: a `latest` made up entirely of breaking
+      // items still means there is a page 2 to fetch.
       setHasMore(payload.latest.length > 0);
     } catch (caught) {
       setError(caught instanceof ApiError ? caught : new ApiError("Unexpected error", false));
       setHome(EMPTY_HOME);
       setStories([]);
+      breakingIdsRef.current = new Set();
       setFeed([]);
       setHasMore(false);
     } finally {
@@ -129,7 +139,12 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       setHasMore(result.hasMore && result.items.length > 0);
       setFeed((previous) => {
         const seen = new Set(previous.map((article) => article.id));
-        return [...previous, ...result.items.filter((article) => !seen.has(article.id))];
+        return [
+          ...previous,
+          ...result.items.filter(
+            (article) => !seen.has(article.id) && !breakingIdsRef.current.has(article.id)
+          ),
+        ];
       });
     } catch {
       // A failed page-append leaves the existing feed intact; the user can
@@ -170,7 +185,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           </>
         ) : null}
 
-        <SectionHeader title="पछिल्लो समाचार" />
+        <SectionHeader title="ताजा खबर" />
       </View>
     ),
     [home, stories, seenStories, navigation, styles]

@@ -28,7 +28,7 @@ const BreakingStrip: React.FC<BreakingStripProps> = ({ articles, navigation }) =
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.liveDot} />
-        <Text style={styles.headerText}>ताजा खबर</Text>
+        <Text style={styles.headerText}>ब्रेकिङ न्युज</Text>
         <Ionicons name="flash" size={14} color={theme.colors.onBrand} />
       </View>
 
