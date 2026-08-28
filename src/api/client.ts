@@ -1,5 +1,15 @@
 import { readCache, writeCache } from "../storage/cache";
-import { ApiError, Article, Category, Edition, HomePayload, NewsQuery, Page, Tag } from "./types";
+import {
+  ApiError,
+  Article,
+  Category,
+  Edition,
+  HomePayload,
+  NewsQuery,
+  Page,
+  Story,
+  Tag,
+} from "./types";
 
 export * from "./types";
 
@@ -183,6 +193,31 @@ export async function getEditions(): Promise<Edition[]> {
   } catch (error) {
     // Older API deployments have no /editions; the app then shows only the
     // default edition's categories rather than failing the drawer.
+    if (error instanceof ApiError && error.status === 404) {
+      return [];
+    }
+    throw error;
+  }
+}
+
+/**
+ * The curated story rail: today's most-viewed set followed by the "on this
+ * day" throwbacks, already in display order.
+ *
+ * Returns an empty list rather than throwing when there is nothing to show --
+ * the sets are rebuilt by a scheduled job, so a day it has not run for yet is
+ * an ordinary state, and the rail simply hides itself.
+ */
+export async function getStories(edition?: number): Promise<Story[]> {
+  try {
+    const response = await requestWithCache<{ data: Story[] }>(
+      buildUrl("stories", { edition }),
+      `stories:${edition ?? "default"}`
+    );
+    return response.data ?? [];
+  } catch (error) {
+    // Older API deployments have no /stories; the app then renders the home
+    // screen without a rail rather than failing the whole screen.
     if (error instanceof ApiError && error.status === 404) {
       return [];
     }

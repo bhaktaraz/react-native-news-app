@@ -49,6 +49,30 @@ export interface Article {
   related_news?: Article[];
 }
 
+/** The article fields the story rail and viewer render; deliberately a
+ *  subset of Article, since /api/stories omits the article body. */
+export interface StoryNews {
+  id: number;
+  title: string;
+  intro?: string;
+  image: string;
+  created_on: string;
+  url?: string;
+  date_np?: string;
+  /** Nepali year of publication, shown as the "on this day" bubble badge. */
+  year_np?: string;
+}
+
+export type StoryType = "today_top" | "on_this_day";
+
+export interface Story {
+  type: StoryType;
+  position: number;
+  /** Views at the time the set was generated, not a live count. */
+  view_count: number;
+  news: StoryNews;
+}
+
 export interface Page<T> {
   items: T[];
   page: number;

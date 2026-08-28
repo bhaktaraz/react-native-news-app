@@ -8,12 +8,15 @@ import {
   View,
 } from "react-native";
 import { NavigationProp } from "@react-navigation/native";
-import { getHome, getNewsPage, DEFAULT_PER_PAGE } from "../api/client";
-import { ApiError, Article, HomePayload } from "../api/types";
+import { getHome, getNewsPage, getStories, DEFAULT_PER_PAGE } from "../api/client";
+import { ApiError, Article, HomePayload, Story } from "../api/types";
 import ArticleCard from "../components/ArticleCard";
 import BreakingStrip from "../components/BreakingStrip";
 import CategoryChips from "../components/CategoryChips";
 import SectionHeader from "../components/SectionHeader";
+import StoryRail from "../components/StoryRail";
+import StoryViewer from "../components/StoryViewer";
+import { markStorySeen, pruneSeenStories, readSeenStories } from "../storage/seenStories";
 import { ArticleListSkeleton, EmptyState, ErrorState } from "../components/StateViews";
 import { useTheme, spacing, typography } from "../theme";
 
@@ -34,6 +37,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const styles = useMemo(() => createStyles(theme), [theme]);
 
   const [home, setHome] = useState<HomePayload>(EMPTY_HOME);
+  const [stories, setStories] = useState<Story[]>([]);
+  const [seenStories, setSeenStories] = useState<Set<number>>(() => new Set());
+  const [openStoryIndex, setOpenStoryIndex] = useState<number | null>(null);
   const [feed, setFeed] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -54,14 +60,21 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     setError(null);
 
     try {
-      const payload = await getHome();
+      // The rail is decoration; a failing /stories must not cost the reader
+      // the whole home screen, so it degrades to no rail.
+      const [payload, storyList] = await Promise.all([
+        getHome(),
+        getStories().catch(() => [] as Story[]),
+      ]);
       setHome(payload);
+      setStories(storyList);
       setFeed(payload.latest);
       pageRef.current = 1;
       setHasMore(payload.latest.length > 0);
     } catch (caught) {
       setError(caught instanceof ApiError ? caught : new ApiError("Unexpected error", false));
       setHome(EMPTY_HOME);
+      setStories([]);
       setFeed([]);
       setHasMore(false);
     } finally {
@@ -73,6 +86,35 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   useEffect(() => {
     load();
   }, [load]);
+
+  useEffect(() => {
+    readSeenStories().then(setSeenStories).catch(() => {});
+    pruneSeenStories();
+  }, []);
+
+  // These three are handed to the viewer, whose progress timer restarts on any
+  // prop change, so they must keep a stable identity across renders.
+  const handleCloseStory = useCallback(() => setOpenStoryIndex(null), []);
+
+  const handleStorySeen = useCallback((newsId: number) => {
+    markStorySeen(newsId);
+    setSeenStories((previous) => {
+      if (previous.has(newsId)) {
+        return previous;
+      }
+      const next = new Set(previous);
+      next.add(newsId);
+      return next;
+    });
+  }, []);
+
+  const handleStoryReadMore = useCallback(
+    (newsId: number) => {
+      setOpenStoryIndex(null);
+      navigation.navigate("ArticleDetail", { id: newsId });
+    },
+    [navigation]
+  );
 
   const loadMore = useCallback(async () => {
     if (loadingMore || loading || refreshing || !hasMore) {
@@ -101,6 +143,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const header = useMemo(
     () => (
       <View>
+        <StoryRail stories={stories} seen={seenStories} onOpen={setOpenStoryIndex} />
+
         <BreakingStrip articles={home.breaking} navigation={navigation} />
 
         <CategoryChips categories={home.categories} navigation={navigation} />
@@ -129,7 +173,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         <SectionHeader title="पछिल्लो समाचार" />
       </View>
     ),
-    [home, navigation, styles]
+    [home, stories, seenStories, navigation, styles]
   );
 
   const footer = useMemo(() => {
@@ -186,6 +230,14 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           />
         }
         showsVerticalScrollIndicator={false}
+      />
+
+      <StoryViewer
+        stories={stories}
+        startIndex={openStoryIndex}
+        onClose={handleCloseStory}
+        onSeen={handleStorySeen}
+        onReadMore={handleStoryReadMore}
       />
     </View>
   );
