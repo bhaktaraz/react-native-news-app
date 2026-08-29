@@ -3,13 +3,18 @@ import React from "react";
 import { StatusBar } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import {
+  createNavigationContainerRef,
   DarkTheme,
   DefaultTheme,
   NavigationContainer,
   Theme as NavTheme,
 } from "@react-navigation/native";
 import DrawerNavigator from "./src/navigators/drawer-navigator";
+import { NewsStackParamList } from "./src/navigators/screen-stack-navigators";
 import { ThemeProvider, useTheme } from "./src/theme";
+import { initPushNotifications } from "./src/services/notifications";
+
+const navigationRef = createNavigationContainerRef<NewsStackParamList>();
 
 /** Bridges the app's tokens into React Navigation so screen transitions and
  *  card backgrounds match the active theme instead of flashing white. */
@@ -31,7 +36,11 @@ const Root: React.FC = () => {
   return (
     <>
       <StatusBar barStyle={theme.dark ? "light-content" : "dark-content"} />
-      <NavigationContainer theme={navigationTheme}>
+      <NavigationContainer
+        ref={navigationRef}
+        theme={navigationTheme}
+        onReady={() => initPushNotifications(navigationRef)}
+      >
         <DrawerNavigator />
       </NavigationContainer>
     </>
