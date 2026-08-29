@@ -19,7 +19,7 @@
         tools:replace="android:value" />
       <meta-data
         android:name="com.google.firebase.messaging.default_notification_icon"
-        android:resource="@mipmap/ic_launcher" />
+        android:resource="@drawable/ic_notification" />
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
