@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import {
   CategoryNavigator,
@@ -40,6 +41,7 @@ const TAB_ROOTS: Record<keyof BottomTabParamList, string> = {
 
 const BottomTabNavigator = () => {
   const theme = useTheme();
+  const insets = useSafeAreaInsets();
 
   return (
     <Tab.Navigator
@@ -72,8 +74,8 @@ const BottomTabNavigator = () => {
           backgroundColor: theme.colors.surface,
           borderTopWidth: StyleSheet.hairlineWidth,
           borderTopColor: theme.colors.border,
-          height: 62,
-          paddingBottom: 8,
+          height: 62 + insets.bottom,
+          paddingBottom: 8 + insets.bottom,
           paddingTop: 8,
         },
         tabBarLabelStyle: {
