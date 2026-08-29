@@ -54,9 +54,10 @@ const BottomTabNavigator = () => {
           // get back to the feed. Re-navigating to the stack's root pops the
           // article (or category listing) off instead.
           event.preventDefault();
-          navigation.navigate(route.name as never, {
-            screen: TAB_ROOTS[route.name as keyof BottomTabParamList],
-          } as never);
+          (navigation.navigate as (name: string, params: { screen: string }) => void)(
+            route.name,
+            { screen: TAB_ROOTS[route.name as keyof BottomTabParamList] },
+          );
         },
       })}
       screenOptions={({ route }) => ({

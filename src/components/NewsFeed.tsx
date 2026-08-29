@@ -62,7 +62,7 @@ const NewsFeed: React.FC<NewsFeedProps> = ({
             showCategory={showCategory}
           />
         )}
-        ListHeaderComponent={header}
+        ListHeaderComponent={header ?? undefined}
         contentContainerStyle={styles.listContent}
         refreshing={refreshing}
         onRefresh={refresh}

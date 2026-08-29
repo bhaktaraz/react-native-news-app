@@ -30,10 +30,7 @@ const Root: React.FC = () => {
 
   return (
     <>
-      <StatusBar
-        barStyle={theme.dark ? "light-content" : "dark-content"}
-        backgroundColor={theme.colors.surface}
-      />
+      <StatusBar barStyle={theme.dark ? "light-content" : "dark-content"} />
       <NavigationContainer theme={navigationTheme}>
         <DrawerNavigator />
       </NavigationContainer>

@@ -47,7 +47,7 @@ export async function pruneSeenStories(): Promise<void> {
     const keys = await AsyncStorage.getAllKeys();
     const stale = keys.filter((key) => key.startsWith("@dk/seen-stories/") && key !== today);
     if (stale.length) {
-      await AsyncStorage.multiRemove(stale);
+      await AsyncStorage.removeMany(stale);
     }
   } catch {
     // Nothing actionable -- pruning is housekeeping, not correctness.

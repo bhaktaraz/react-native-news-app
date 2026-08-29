@@ -55,7 +55,7 @@ export async function clearCache(): Promise<void> {
     const keys = await AsyncStorage.getAllKeys();
     const ours = keys.filter((key) => key.startsWith(PREFIX));
     if (ours.length) {
-      await AsyncStorage.multiRemove(ours);
+      await AsyncStorage.removeMany(ours);
     }
   } catch {
     // Nothing actionable -- clearing the cache is always best-effort.

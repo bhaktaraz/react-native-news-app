@@ -162,7 +162,7 @@ const StoryViewer: React.FC<StoryViewerProps> = ({
 
   return (
     <Modal visible animationType="fade" onRequestClose={close} statusBarTranslucent>
-      <StatusBar barStyle="light-content" backgroundColor="#000000" />
+      <StatusBar barStyle="light-content" />
       <Animated.View style={[styles.container, { transform: [{ translateY: dragY }] }]}>
         <View style={styles.stage} {...panResponder.panHandlers}>
           {story.news.image ? (
@@ -289,10 +289,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   media: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
   },
   mediaBackdrop: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     // Blur samples the edge pixels, so the backdrop is scaled past the frame
     // to keep a soft halo from creeping in around the border.
     transform: [{ scale: 1.15 }],
@@ -303,7 +303,7 @@ const styles = StyleSheet.create({
   // Light overall wash: enough to lift the progress bar and close button off a
   // pale photo, but not so much that it flattens the picture itself.
   scrim: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     backgroundColor: "rgba(0,0,0,0.18)",
   },
   bottomShade: {
