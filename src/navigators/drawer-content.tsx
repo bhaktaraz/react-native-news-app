@@ -209,6 +209,19 @@ const DrawerContent: React.FC<DrawerContentComponentProps> = ({ navigation, stat
           ))
         )}
 
+        <Text style={styles.sectionLabel}>बारेमा</Text>
+        <TouchableOpacity
+          activeOpacity={0.75}
+          style={styles.linkRow}
+          onPress={() => {
+            navigation.navigate("Contact");
+            navigation.closeDrawer();
+          }}
+        >
+          <Ionicons name="call-outline" size={20} color={theme.colors.textSecondary} />
+          <Text style={styles.linkLabel}>सम्पर्क</Text>
+        </TouchableOpacity>
+
         <Text style={styles.sectionLabel}>थिम</Text>
         <View style={styles.themeRow}>
           {THEME_OPTIONS.map((option) => {
