@@ -65,3 +65,6 @@ dhangadhikhabar-app-key.keystore
 
 # macOS
 .DS_Store
+
+# Local notes / rejection reports, not for the repo
+/docs/
