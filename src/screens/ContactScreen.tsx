@@ -1,45 +1,95 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Linking, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { ApiError, ContactInfo, getContactInfo } from "../api/client";
+import { ErrorState, SkeletonBlock } from "../components/StateViews";
 import { useTheme, radius, spacing, typography } from "../theme";
-
-const CONTACT = {
-  address: "Dhangadhi-3, Bishalnagar, Kailali",
-  phone1: "977-91417611",
-  phone2: "977-9851168362",
-  email: "dhnkhabar@gmail.com",
-  website: "https://www.dhangadhikhabar.com/contact",
-};
 
 const ContactScreen: React.FC = () => {
   const theme = useTheme();
   const styles = useMemo(() => createStyles(theme), [theme]);
 
+  const [contact, setContact] = useState<ContactInfo | null>(null);
+  const [error, setError] = useState<ApiError | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const load = useCallback(() => {
+    let active = true;
+    setLoading(true);
+    setError(null);
+
+    getContactInfo()
+      .then((data) => {
+        if (active) {
+          setContact(data);
+        }
+      })
+      .catch((err) => {
+        if (active) {
+          setError(err instanceof ApiError ? err : new ApiError("Unknown error", false));
+        }
+      })
+      .finally(() => {
+        if (active) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => load(), [load]);
+
+  if (loading && !contact) {
+    return (
+      <View style={[styles.container, styles.content]}>
+        <SkeletonBlock height={28} width="60%" style={{ marginBottom: spacing.sm }} />
+        <SkeletonBlock height={18} width="90%" style={{ marginBottom: spacing.xl }} />
+        <SkeletonBlock height={220} />
+      </View>
+    );
+  }
+
+  if (error && !contact) {
+    return (
+      <View style={styles.container}>
+        <ErrorState error={error} onRetry={load} />
+      </View>
+    );
+  }
+
   const rows = [
-    {
+    contact?.address && {
       icon: "location-outline" as const,
       label: "ठेगाना",
-      value: CONTACT.address,
+      value: contact.address,
     },
-    {
+    (contact?.phone1 || contact?.phone2) && {
       icon: "call-outline" as const,
       label: "फोन",
-      value: `${CONTACT.phone1} / ${CONTACT.phone2}`,
-      onPress: () => Linking.openURL(`tel:${CONTACT.phone1.replace(/[^+\d]/g, "")}`),
+      value: [contact?.phone1, contact?.phone2].filter(Boolean).join(" / "),
+      onPress: () => Linking.openURL(`tel:${(contact?.phone1 ?? contact?.phone2)!.replace(/[^+\d]/g, "")}`),
     },
-    {
+    contact?.email && {
       icon: "mail-outline" as const,
       label: "इमेल",
-      value: CONTACT.email,
-      onPress: () => Linking.openURL(`mailto:${CONTACT.email}`),
+      value: contact.email,
+      onPress: () => Linking.openURL(`mailto:${contact.email}`),
     },
-    {
+    contact?.website && {
       icon: "globe-outline" as const,
       label: "वेबसाइट",
-      value: CONTACT.website.replace("https://", ""),
-      onPress: () => Linking.openURL(CONTACT.website),
+      value: contact.website.replace("https://", ""),
+      onPress: () => Linking.openURL(contact.website!),
     },
-  ];
+  ].filter(Boolean) as {
+    icon: "location-outline" | "call-outline" | "mail-outline" | "globe-outline";
+    label: string;
+    value: string;
+    onPress?: () => void;
+  }[];
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>

@@ -3,6 +3,7 @@ import {
   ApiError,
   Article,
   Category,
+  ContactInfo,
   Edition,
   HomePayload,
   NewsQuery,
@@ -232,4 +233,23 @@ export async function getTrendingTags(): Promise<Tag[]> {
 
 export async function searchNews(term: string, page = 1): Promise<Page<Article>> {
   return getNewsPage({ q: term, page });
+}
+
+/** Office contact details published in Play Store / site declarations, kept
+ *  live from the site config rather than duplicated as a static copy in the app. */
+export async function getContactInfo(): Promise<ContactInfo> {
+  const response = await requestWithCache<{ data: { key: string; value: string }[] }>(
+    buildUrl("configs"),
+    "configs"
+  );
+  const configs = response.data ?? [];
+  const get = (key: string) => configs.find((entry) => entry.key === key)?.value || undefined;
+
+  return {
+    address: get("office_address"),
+    email: get("office_email"),
+    phone1: get("office_phone1"),
+    phone2: get("office_phone2"),
+    website: "https://www.dhangadhikhabar.com/contact",
+  };
 }

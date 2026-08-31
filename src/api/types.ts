@@ -99,6 +99,14 @@ export interface NewsQuery {
   featured?: boolean;
 }
 
+export interface ContactInfo {
+  address?: string;
+  email?: string;
+  phone1?: string;
+  phone2?: string;
+  website?: string;
+}
+
 /** Thrown for any failed request so screens can tell offline from server error. */
 export class ApiError extends Error {
   readonly offline: boolean;

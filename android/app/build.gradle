@@ -27,8 +27,8 @@ android {
         applicationId "com.anubhabi.dhangadhikhabar"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 5
-        versionName "1.2"
+        versionCode 6
+        versionName "1.2.1"
         manifestPlaceholders = [usesCleartextTraffic: "false"]
     }
 
