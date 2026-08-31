@@ -55,7 +55,9 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
           <Text style={styles.compactTitle} numberOfLines={3}>
             {article.title}
           </Text>
-          <Text style={styles.metaText}>{time}</Text>
+          <Text style={styles.metaText}>
+            {authorName(article.author)} · {time}
+          </Text>
         </View>
         <Image source={imageSource(article.image)} style={styles.compactImage} />
       </TouchableOpacity>

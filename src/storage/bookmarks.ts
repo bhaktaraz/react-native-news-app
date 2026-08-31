@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Article } from "../api/types";
+import { Article, Author } from "../api/types";
 
 const KEY = "@dk/bookmarks";
 
@@ -10,6 +10,7 @@ export interface Bookmark {
   image: string;
   intro: string;
   url: string;
+  author?: Author | string;
   date_np?: string;
   created_on: string;
   savedAt: number;
@@ -21,6 +22,7 @@ export const toBookmark = (article: Article): Bookmark => ({
   image: article.image,
   intro: article.intro,
   url: article.url,
+  author: article.author,
   date_np: article.date_np,
   created_on: article.created_on,
   savedAt: Date.now(),

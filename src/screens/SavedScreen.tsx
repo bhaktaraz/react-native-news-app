@@ -5,6 +5,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { Bookmark, getBookmarks, removeBookmark } from "../storage/bookmarks";
 import { DEFAULT_ARTICLE_IMAGE } from "../components/ArticleCard";
 import { EmptyState } from "../components/StateViews";
+import { authorName } from "../api/types";
 import { useTheme, radius, spacing, typography } from "../theme";
 import { relativeTime } from "../utils/time";
 
@@ -64,7 +65,9 @@ const SavedScreen: React.FC<SavedScreenProps> = ({ navigation }) => {
               <Text style={styles.title} numberOfLines={3}>
                 {item.title}
               </Text>
-              <Text style={styles.meta}>{relativeTime(item.created_on)}</Text>
+              <Text style={styles.meta}>
+                {authorName(item.author)} · {relativeTime(item.created_on)}
+              </Text>
             </View>
             <TouchableOpacity
               onPress={() => remove(item.id)}
